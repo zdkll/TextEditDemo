@@ -108,7 +108,7 @@ void TextEditWidget::initWidget()
     textBrowser = new TextBrowser(this);
     splitter->addWidget(textBrowser);
 
-    textEdit = new QTextEdit(this);
+    textEdit = new TextEdit(this);
     splitter->addWidget(textEdit);
 
     splitter->setStretchFactor(0,1);

@@ -7,6 +7,7 @@
 #include <QPushButton>
 
 #include <textbrowser.h>
+#include <textedit.h>
 
 namespace Ui {
 class TextEditWidget;
@@ -36,7 +37,7 @@ private:
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
     void initWidget();
 
-    QTextEdit  *textEdit;
+    TextEdit  *textEdit;
     TextBrowser *textBrowser;
     QPushButton   *sendButton;
 };
