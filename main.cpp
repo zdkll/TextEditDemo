@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     TextEditWidget w;
     QTime t;
-    int n = 100;
+    int n = 10;
     while(n--){
         t.start();
         while(t.elapsed()<10){

@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         texteditwidget.cpp \
     mysplashscreen.cpp \
-    textbrowser.cpp
+    textbrowser.cpp \
+    textedit.cpp
 
 HEADERS  += texteditwidget.h \
     mysplashscreen.h \
-    textbrowser.h
+    textbrowser.h \
+    textedit.h
 
 FORMS    += texteditwidget.ui
 

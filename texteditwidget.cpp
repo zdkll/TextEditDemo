@@ -39,12 +39,35 @@ TextEditWidget::TextEditWidget(QWidget *parent) :
     initWidget();
 
     QTextCursor textCursor = textEdit->textCursor();
+    QTextFrame *rootFrame=   textEdit->document()->rootFrame();
 
-    textCursor.insertText(QStringLiteral("这是颜色字段"));
+    //插入文本块
+    QTextBlockFormat bft;
+    bft.setAlignment(Qt::AlignLeft);
+    bft.setTopMargin(10);
+    bft.setBackground(Qt::green);
+    bft.setForeground(Qt::red);
 
-    textColorChanged(Qt::red);
+    QTextCharFormat cft;
+    cft.setForeground(Qt::red);
+    //textCursor.insertBlock(bft,cft);
+    textCursor.setBlockFormat(bft);
+    textCursor.setBlockCharFormat(cft);
+    textCursor.insertText(QStringLiteral("Block 文字"));
 
-    textCursor.insertText(QStringLiteral("这是颜色字段"));
+    //插入图片
+    QTextImageFormat imageFormat;
+    imageFormat.setName("C:/Users/Administrator/Desktop/pics/dingding.png");
+    imageFormat.setWidth(200);
+    imageFormat.setProperty(1,QString("C:/Users/Administrator/Desktop/pics/dingding.png"));
+    // ui->textEdit->textCursor().insertImage(imageFormat);
+    textCursor.insertImage(imageFormat);
+    qDebug()<<textCursor.blockNumber();
+
+    textCursor.insertText(QStringLiteral(" 这是颜色字段"));
+
+    textCursor.insertBlock();
+    textCursor.insertText("block 1");
 
     QTextDocumentWriter writer("D:/files/test1.html");
     writer.write(textEdit->document());
@@ -89,7 +112,8 @@ void TextEditWidget::textSize(const QString &p)
 
 void TextEditWidget::sendMessage()
 {
-    textBrowser->textCursor().insertText(textEdit->document()->toPlainText());
+    textBrowser->sendMessage(textEdit->document());
+    textEdit->document()->clear();
 }
 
 void TextEditWidget::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
