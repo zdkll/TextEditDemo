@@ -1,5 +1,12 @@
 ﻿#include "textbrowser.h"
 
+#define MESSAGE_BOTTOM_MARGIN  40
+
+#define PERSON_ICON_SIZE                                        48
+#define MESSAGE_MINIMUM_HEIGHT                          PERSON_ICON_SIZE
+#define MESSAGE_TEXT_MARGIN_LEFT_OR_RIGHT   68
+#define MESSAGE_BOTTOM_MARGIN                          40
+
 #include <QTextFrame>
 #include <QTextBlock>
 #include <QTextTable>
@@ -10,8 +17,7 @@
 TextBrowser::TextBrowser(QWidget* parent)
     :QTextBrowser(parent)
 {
-    //从rootFrame 开始遍历
-    textFrame = this->document()->rootFrame();
+
 }
 
 void TextBrowser::sendMessage(QTextDocument *doc)
@@ -19,21 +25,11 @@ void TextBrowser::sendMessage(QTextDocument *doc)
     qDebug()<<"send message-----------------------";
 
     //一条消息Message_Frame-----------------------------
-    QTextFrameFormat msg_all_tff;
-    msg_all_tff.setBorder(1);
-    msg_all_tff.setBottomMargin(20);
-    msg_all_tff.setPosition(QTextFrameFormat::FloatRight);
-    textFrame =  textFrame->lastCursorPosition().insertFrame(msg_all_tff);
+    QTextFrame *textFrame = addMessageFrame(MT_Send);
+    QTextCursor textCursor = textFrame->firstCursorPosition();
 
-    //时间textblock
-    QTextBlockFormat time_tbf;
-    time_tbf.setAlignment(Qt::AlignRight);
-    time_tbf.setRightMargin(80);
-    this->textCursor().insertBlock(time_tbf);
-    QTextCharFormat time_tct;
-    time_tct.setForeground(QColor("#c6c6c6"));
-    this->textCursor().insertText(QStringLiteral("5月21日 13:54"),time_tct);
-
+    //时间
+    insertMessageTime(textFrame,MT_Send);
 
     //插入表格
     QTextTableFormat tableFormat;
@@ -42,7 +38,7 @@ void TextBrowser::sendMessage(QTextDocument *doc)
                                           <<QTextLength(QTextLength::FixedLength,40));
     tableFormat.setBorderBrush(Qt::red);
     tableFormat.setPosition(QTextFrameFormat::FloatRight);
-    QTextTable *textTable = this->textCursor().insertTable(1,2,tableFormat);
+    QTextTable *textTable = textCursor.insertTable(1,2,tableFormat);
     QTextCursor tabCursor1 = textTable->cellAt(0,0).firstCursorPosition();
 
     QTextCharFormat tab_cft;
@@ -57,7 +53,6 @@ void TextBrowser::sendMessage(QTextDocument *doc)
     header_ift.setWidth(48);
     header_ift.setHeight(48);
     tabCursor1.insertImage(header_ift);
-
 
     //    //构建文本TextFrame
     //    for (; !(tf_it.atEnd()); ++tf_it) {
@@ -84,27 +79,13 @@ void TextBrowser::sendMessage(QTextDocument *doc)
 void TextBrowser::recvMessage()
 {
     qDebug()<<"recv message-----------------------";
-    QTextCursor textCursor =  document()->rootFrame()->lastCursorPosition();
 
     //一条消息Message_Frame-----------------------------
-    //tabCursor1.movePosition(QTextCursor::EndOfBlock);
-    QTextFrameFormat msg_all_tff;
-    msg_all_tff.setBottomMargin(20);
-    msg_all_tff.setBorder(1);
-    QTextLength textLength(QTextLength::VariableLength,240);
-    msg_all_tff.setWidth(textLength);
-    msg_all_tff.setBorderBrush(Qt::red);
-    msg_all_tff.setPosition(QTextFrameFormat::FloatLeft);
-    textCursor.insertFrame(msg_all_tff);
+    QTextFrame *textFrame = addMessageFrame(MT_Reciever);
+    QTextCursor textCursor = textFrame->firstCursorPosition();
 
-    //时间textblock
-    QTextBlockFormat time_tbf;
-    time_tbf.setAlignment(Qt::AlignLeft);
-    time_tbf.setLeftMargin(80);
-    textCursor.insertBlock(time_tbf);
-    QTextCharFormat time_tct;
-    time_tct.setForeground(QColor("#c6c6c6"));
-    textCursor.insertText(QStringLiteral("5月21日 13:54"),time_tct);
+    //时间
+    insertMessageTime(textFrame,MT_Reciever);
 
     //插入表格
     QTextTableFormat tableFormat;
@@ -129,6 +110,35 @@ void TextBrowser::recvMessage()
     tab_cft.setForeground(Qt::red);
     tabCursor1.insertText(QStringLiteral("收到的信息"),tab_cft);
 
+}
+
+
+QTextFrame *TextBrowser::addMessageFrame(TextBrowser::MessageType msgType)
+{
+    QTextCursor textCursor =  document()->rootFrame()->lastCursorPosition();
+
+    QTextFrameFormat msg_all_tff;
+    msg_all_tff.setBorder(1);
+    msg_all_tff.setBorderBrush(msgType == MT_Send?Qt::green:Qt::blue);
+    msg_all_tff.setBottomMargin(MESSAGE_BOTTOM_MARGIN);
+    msg_all_tff.setPosition(msgType == MT_Send?QTextFrameFormat::FloatRight:QTextFrameFormat::FloatLeft);
+
+    return textCursor.insertFrame(msg_all_tff);
+}
+
+void TextBrowser::insertMessageTime(QTextFrame *textFrame,MessageType msgType)
+{
+    QTextCursor textCursor = textFrame->lastCursorPosition();
+    //时间textblock
+    QTextBlockFormat time_tbf;
+    time_tbf.setAlignment(msgType == MT_Send?Qt::AlignRight:Qt::AlignLeft);
+    msgType == MT_Send?time_tbf.setRightMargin(MESSAGE_TEXT_MARGIN_LEFT_OR_RIGHT)
+                     :time_tbf.setLeftMargin(MESSAGE_TEXT_MARGIN_LEFT_OR_RIGHT);
+
+    QTextCharFormat time_tct;
+    time_tct.setForeground(QColor("#c6c6c6"));
+    textCursor.insertBlock(time_tbf);
+    textCursor.insertText(QStringLiteral("5月21日 13:54"));
 }
 
 
