@@ -3,6 +3,7 @@
 
 #include <QTextDocument>
 #include <QTextBrowser>
+#include <QTextFormat>
 
 class TextBrowser : public QTextBrowser
 {
@@ -22,12 +23,20 @@ public:
 
 private:
     //添加消息
-    QTextFrame *addMessageFrame(MessageType msgType);
+    void addMessage(MessageType msgType);
 
-    //设置时间
-    void insertMessageTime(QTextFrame *textFrame,MessageType msgType);
+    inline QTextFrameFormat::Position framePosition (MessageType msgType)const;
+    inline Qt::Alignment textFormatAlignment(MessageType msgType) const;
 
+    QTextTableFormat textTableFormat(MessageType msgType)const;
 
 };
+
+inline QTextFrameFormat::Position TextBrowser::framePosition(TextBrowser::MessageType msgType)const{
+    return msgType == TextBrowser::MT_Send?QTextFrameFormat::FloatRight:QTextFrameFormat::FloatLeft;
+}
+inline Qt::Alignment TextBrowser::textFormatAlignment(TextBrowser::MessageType msgType) const{
+    return msgType== TextBrowser::MT_Send?Qt::AlignRight:Qt::AlignLeft;
+}
 
 #endif // TEXTBROWSER_H

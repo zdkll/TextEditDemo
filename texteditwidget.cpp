@@ -48,6 +48,7 @@ TextEditWidget::TextEditWidget(QWidget *parent) :
     bft.setBackground(Qt::green);
     bft.setForeground(Qt::red);
 
+
     QTextCharFormat cft;
     cft.setForeground(Qt::red);
     //textCursor.insertBlock(bft,cft);
@@ -57,16 +58,20 @@ TextEditWidget::TextEditWidget(QWidget *parent) :
 
     //插入图片
     QTextImageFormat imageFormat;
-    imageFormat.setName("C:/Users/Administrator/Desktop/pics/dingding.png");
+    imageFormat.setName(":/images/test.jpg");
     imageFormat.setWidth(200);
-    imageFormat.setProperty(1,QString("C:/Users/Administrator/Desktop/pics/dingding.png"));
-    // ui->textEdit->textCursor().insertImage(imageFormat);
+    imageFormat.setProperty(1,QString("test.jpg"));
+    //ui->textEdit->textCursor().insertImage(imageFormat);
     textCursor.insertImage(imageFormat);
     qDebug()<<textCursor.blockNumber();
 
     textCursor.insertText(QStringLiteral(" 这是颜色字段"));
 
-    textCursor.insertBlock();
+   QTextBlockFormat bft2;
+   bft2.setNonBreakableLines(true);
+   bft2.setPageBreakPolicy(QTextBlockFormat::PageBreak_AlwaysAfter);
+
+    textCursor.insertBlock(bft2);
     textCursor.insertText("block 1");
 
     QTextDocumentWriter writer("D:/files/test1.html");
