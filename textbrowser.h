@@ -5,15 +5,11 @@
 #include <QTextBrowser>
 #include <QTextFormat>
 
+#include "publicdef.h"
+
 class TextBrowser : public QTextBrowser
 {
 public:
-    //消息类型
-    enum  MessageType{
-        MT_Send,
-        MT_Reciever
-    };
-
     TextBrowser(QWidget* parent = Q_NULLPTR);
 
     //整个文档发送，内部接收后读取自动拆分块显示
@@ -21,22 +17,25 @@ public:
     //接收到消息
     void  recvMessage();
 
+protected:
+    void mousePressEvent(QMouseEvent *e);
+
 private:
     //添加消息
-    void addMessage(MessageType msgType);
+    void addMessage(MessageDef::Message msg);
 
-    inline QTextFrameFormat::Position framePosition (MessageType msgType)const;
-    inline Qt::Alignment textFormatAlignment(MessageType msgType) const;
+    inline QTextFrameFormat::Position framePosition (MessageDef::MessageType msgType)const;
+    inline Qt::Alignment textFormatAlignment(MessageDef::MessageType msgType) const;
 
-    QTextTableFormat textTableFormat(MessageType msgType)const;
+    QTextTableFormat textTableFormat(MessageDef::MessageType msgType)const;
 
 };
 
-inline QTextFrameFormat::Position TextBrowser::framePosition(TextBrowser::MessageType msgType)const{
-    return msgType == TextBrowser::MT_Send?QTextFrameFormat::FloatRight:QTextFrameFormat::FloatLeft;
+inline QTextFrameFormat::Position TextBrowser::framePosition(MessageDef::MessageType msgType)const{
+    return msgType == MessageDef::MT_Send?QTextFrameFormat::FloatRight:QTextFrameFormat::FloatLeft;
 }
-inline Qt::Alignment TextBrowser::textFormatAlignment(TextBrowser::MessageType msgType) const{
-    return msgType== TextBrowser::MT_Send?Qt::AlignRight:Qt::AlignLeft;
+inline Qt::Alignment TextBrowser::textFormatAlignment(MessageDef::MessageType msgType) const{
+    return msgType== MessageDef::MT_Send?Qt::AlignRight:Qt::AlignLeft;
 }
 
 #endif // TEXTBROWSER_H

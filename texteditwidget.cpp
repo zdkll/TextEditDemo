@@ -60,7 +60,7 @@ TextEditWidget::TextEditWidget(QWidget *parent) :
     QTextImageFormat imageFormat;
     imageFormat.setName(":/images/test.jpg");
     imageFormat.setWidth(200);
-    imageFormat.setProperty(1,QString("test.jpg"));
+    imageFormat.setProperty(IMAGE_NAME,QString("test.jpg"));
     //ui->textEdit->textCursor().insertImage(imageFormat);
     textCursor.insertImage(imageFormat);
     qDebug()<<textCursor.blockNumber();

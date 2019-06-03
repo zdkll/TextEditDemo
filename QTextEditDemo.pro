@@ -21,7 +21,8 @@ SOURCES += main.cpp\
 HEADERS  += texteditwidget.h \
     mysplashscreen.h \
     textbrowser.h \
-    textedit.h
+    textedit.h \
+    publicdef.h
 
 FORMS    += texteditwidget.ui
 
